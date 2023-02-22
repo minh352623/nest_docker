@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { UserEntity } from "./user/user.entity";
@@ -15,7 +16,9 @@ import { UserModule } from "./user/user.module";
       username: "root",
       password: "root",
       database: "nest_crud",
-      entities: [UserEntity],
+      // entities: [join(__dirname, "/../**/**.entity{.ts,.js}")],
+      // entities: [UserEntity],
+      autoLoadEntities: true,
       synchronize: true, //migration
     }),
     UserModule,
