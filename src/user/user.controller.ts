@@ -32,6 +32,16 @@ export class UserController {
       console.log(err);
     }
   }
+
+  @Get("restore/:id")
+  restoreUser(@Param("id", ParseIntPipe) id: number): Promise<any> {
+    try {
+      return this.userService.restoreById(id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   @Get("/:id")
   getOneUser(@Param("id", ParseIntPipe) id: number): Promise<any> {
     try {
@@ -47,15 +57,25 @@ export class UserController {
     @Body() user: UserDto
   ): Promise<UserDto> {
     try {
-      return this.userService.updateUser(id, user);
+      return this.userService.update(id, user);
     } catch (e) {
       console.log(e);
     }
   }
-  @Delete("/:id")
-  deleteUser(@Param("id", ParseIntPipe) id: number): Promise<any> {
+
+  @Delete("/focre/:id")
+  deleteFocreUser(@Param("id", ParseIntPipe) id: number): Promise<any> {
     try {
-      return this.userService.deleteUser(id);
+      return this.userService.deleteFocreById(id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  @Delete("/:id")
+  deleteSoftUser(@Param("id", ParseIntPipe) id: number): Promise<any> {
+    try {
+      return this.userService.softDeleteOneById(id);
     } catch (e) {
       console.log(e);
     }
