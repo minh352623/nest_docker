@@ -7,18 +7,32 @@ export class MysqlBaseService<Entity extends BaseEntity, Dto> {
   constructor(protected repo: Repository<Entity>) {}
 
   async save(data: Dto): Promise<any> {
-    const saveUser = await this.repo.save(data as any);
-    return plainToInstance(UserDto, saveUser, {
-      excludeExtraneousValues: true,
-    });
+    const dataNew = await this.repo.save(data as any);
+    // return plainToInstance(Dto, dataNew, {
+    //   excludeExtraneousValues: true,
+    // });
+    return dataNew;
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(
+    search?: string,
+    page: number = 1,
+    totalRow: number = 1
+  ): Promise<any[]> {
     try {
-      const users = await this.repo.find();
-      return plainToInstance(UserDto, users, {
-        excludeExtraneousValues: true,
+      let _response: Object = [];
+      const take = totalRow || 2;
+      const skip = (page - 1) * totalRow;
+      const [result, total] = await this.repo.findAndCount({
+        take: take,
+        skip: skip,
       });
+
+      _response = result;
+      return {
+        data: _response,
+        count: total,
+      } as any;
     } catch (e) {
       console.log(e);
     }
@@ -26,12 +40,13 @@ export class MysqlBaseService<Entity extends BaseEntity, Dto> {
 
   async findOne(id: number): Promise<any> {
     try {
-      const user = await this.repo.findOne({
+      const data = await this.repo.findOne({
         where: {
           id: id as any,
         },
       });
-      return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
+      // return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
+      return data;
     } catch (err) {
       console.log(err);
     }

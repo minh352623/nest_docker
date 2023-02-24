@@ -7,6 +7,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
+  Res,
 } from "@nestjs/common";
 import { UserDto } from "./user.dto";
 import { UserService } from "./user.service";
@@ -14,7 +16,7 @@ import { UserService } from "./user.service";
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  // @Res() res: Response;@Req() req: Request;
   @Post()
   createUser(@Body() user: UserDto): Promise<UserDto> {
     try {
@@ -25,9 +27,14 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
+  findAll(
+    @Query("search") search: string,
+    @Query("page") page: number,
+    @Query("totalRow") totalRow: number
+  ) {
     try {
-      return this.userService.findAll();
+      console.log(search, page, totalRow);
+      return this.userService.findAll(search, page, totalRow);
     } catch (err) {
       console.log(err);
     }
